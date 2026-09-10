@@ -15,7 +15,6 @@ inputs:
     default: ''
 
 runs:
-  pre: chainguard-phonehome.js
   using: node20
   main: dist/main/index.js
   post: dist/post/index.js

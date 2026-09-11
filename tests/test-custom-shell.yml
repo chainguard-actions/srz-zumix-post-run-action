@@ -1,0 +1,25 @@
+name: Test custom shell post-run
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        name: Set post-run script with custom shell
+        uses: .
+        with:
+          post-run: |
+            echo "Post run with custom shell"
+          shell: bash -e {0}
+      - name: Assert action step succeeded with custom shell
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "success" ]; then
+            echo "FAIL: expected action to succeed with custom shell, got '$OUTCOME'"
+            exit 1
+          fi
+          echo "PASS: action step succeeded with custom shell"

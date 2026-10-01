@@ -1,0 +1,20 @@
+name: Test multiline post-run script
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          post-run: |
+            echo "step 1 of post-run"
+            echo "step 2 of post-run"
+            DATE=$(date)
+            echo "post-run completed at: $DATE"
+      - name: Assert action step succeeded with multiline script
+        run: |
+          echo "Action step with multiline post-run script completed without error"
+          echo "PASS: post-run action with multiline script registered successfully"

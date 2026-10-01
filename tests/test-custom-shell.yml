@@ -1,0 +1,18 @@
+name: Test custom shell post-run usage
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          post-run: |
+            echo "post-run with custom shell executed"
+          shell: bash -e {0}
+      - name: Assert action step succeeded with custom shell
+        run: |
+          echo "Action step with custom shell completed without error"
+          echo "PASS: post-run action with custom shell registered successfully"

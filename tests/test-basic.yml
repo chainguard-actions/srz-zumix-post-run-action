@@ -1,0 +1,28 @@
+name: Test basic post-run script
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create marker file location
+        run: mkdir -p /tmp/post-run-test
+
+      - id: action
+        name: Set post-run script
+        uses: .
+        with:
+          post-run: |
+            echo "POST RUN EXECUTED" > /tmp/post-run-test/result.txt
+            echo "Post run script ran successfully"
+
+      - name: Assert action step succeeded
+        run: |
+          echo "Action step outcome: ${{ steps.action.outcome }}"
+          if [ "${{ steps.action.outcome }}" != "success" ]; then
+            echo "FAIL: action step did not succeed"
+            exit 1
+          fi
+          echo "PASS: action step succeeded"

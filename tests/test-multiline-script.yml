@@ -1,0 +1,27 @@
+name: Test multiline post-run script
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        name: Set multiline post-run script
+        uses: .
+        with:
+          post-run: |
+            echo "Step 1: Starting post-run cleanup"
+            DATE=$(date +%Y-%m-%d)
+            echo "Step 2: Date is $DATE"
+            echo "Step 3: Post-run complete"
+
+      - name: Assert action step succeeded with multiline script
+        run: |
+          echo "Action step outcome: ${{ steps.action.outcome }}"
+          if [ "${{ steps.action.outcome }}" != "success" ]; then
+            echo "FAIL: action step with multiline script did not succeed"
+            exit 1
+          fi
+          echo "PASS: action step with multiline script succeeded"
